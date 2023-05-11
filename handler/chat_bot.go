@@ -3,6 +3,7 @@ package handler
 import (
 	"fmt"
 	"github.com/gin-gonic/gin"
+	"github.com/tidwall/gjson"
 	"io/ioutil"
 	"net/http"
 )
@@ -28,8 +29,8 @@ func GetChatReplay(c *gin.Context) {
 		jData["errMsg"] = "read response fail"
 		return
 	}
-
-	jData["message"] = string(resp)
+	
+	jData["message"] = gjson.GetBytes(resp, "message").String()
 	c.JSONP(200, jData)
 	return
 }
