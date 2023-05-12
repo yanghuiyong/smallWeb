@@ -16,7 +16,8 @@ func GetChatReplay(c *gin.Context) {
 	}
 
 	url := fmt.Sprintf("http://127.0.0.1:8088/api/getChatReplay?question=%s", c.Query("question"))
-	rsp, err := http.Get(url)
+	rsp, err := http.NewRequest("GET", url, nil)
+	rsp.Header.Set("DisableKeepAlives", "false")
 	if err != nil {
 		jData["ret"] = 500
 		jData["errMsg"] = err.Error()
@@ -29,7 +30,7 @@ func GetChatReplay(c *gin.Context) {
 		jData["errMsg"] = "read response fail"
 		return
 	}
-	
+
 	jData["message"] = gjson.GetBytes(resp, "message").String()
 	c.JSONP(200, jData)
 	return
